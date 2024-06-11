@@ -1,2 +1,2 @@
 # Multi-CPU-Simulation
-In Rust
+Learning threads in rust

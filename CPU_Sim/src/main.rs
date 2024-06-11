@@ -15,7 +15,7 @@ static READY: i32 = 0;
 static RUNNING: i32 = 1;
 static TERMINATED: i32 = 2;
 static KILL: i32 = -1;
-static MAX_PROCESSES: i32 = 12;
+static MAX_PROCESSES: i32 = 25;
 static MAX_CONCURRENT_PROCESSES: i32 = 5;
 
 fn setup_pid_pool(pid_pool : &Arc<Mutex<LinkedList<i32>>>){
@@ -31,9 +31,9 @@ fn setup_pid_pool(pid_pool : &Arc<Mutex<LinkedList<i32>>>){
 fn main() {
 
     // thread nums
-    let num_generators = 1;
-    let num_simulators = 2;
-    let num_terminators = 1;
+    let num_generators = 2;
+    let num_simulators = 4;
+    let num_terminators = 2;
 
     // queues
     // ready queue

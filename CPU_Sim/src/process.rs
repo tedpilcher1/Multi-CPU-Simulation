@@ -1,10 +1,12 @@
 use std::{thread, time::Duration};
+use rand::Rng;
+
 static TIME_SLICE: u64 = 25;
 static READY: i32 = 0;
 static RUNNING: i32 = 1;
 static TERMINATED: i32 = 2;
 static KILL: i32 = -1;
-static MAX_BUST: f64 = 100.0;
+static MAX_BUST: f64 = 1000.0;
 
 pub struct Process {
 
@@ -19,10 +21,12 @@ impl Process {
 
     pub fn generate_process(pid: i32) -> Process {
 
+        let rand_burst_time = rand::thread_rng().gen_range(0.3..1.0) * MAX_BUST;
+
         let process = Process {
             pid,
-            burst_time: MAX_BUST,
-            remaining_burst_time: MAX_BUST,
+            burst_time: rand_burst_time,
+            remaining_burst_time: rand_burst_time,
             state: READY,
         };
 
@@ -33,8 +37,8 @@ impl Process {
 
         let process = Process {
             pid: -1,
-            burst_time: MAX_BUST,
-            remaining_burst_time: MAX_BUST,
+            burst_time: 0.0,
+            remaining_burst_time: 0.0,
             state: KILL,
         };
 

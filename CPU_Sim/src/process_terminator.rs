@@ -25,7 +25,7 @@ pub fn process_terminator_threads (handles: &mut Vec<thread::JoinHandle<()>>, nu
 
         let handle = thread::spawn(move || {
 
-            println!("TERMINATOR {} CREATED", i);
+            println!("DAEMON THREAD {} CREATED", i);
 
             while *total_dropped.lock().unwrap() < MAX_PROCESSES {
 
@@ -46,7 +46,8 @@ pub fn process_terminator_threads (handles: &mut Vec<thread::JoinHandle<()>>, nu
 
                 // get process from terminated queue
                 let process: Process = terminated_guard.pop_front().unwrap();
-                println!("TERMINATED QUEUE REMOVED, PID: {}", process.pid);
+                println!("DAEMON THREAD: {}, TERMINATED QUEUE REMOVED, PID: {}", i, process.pid);
+
 
                 // release guard
                 drop(terminated_guard);
@@ -66,7 +67,7 @@ pub fn process_terminator_threads (handles: &mut Vec<thread::JoinHandle<()>>, nu
                 drop(pid_guard);
 
                 // drop process
-                println!("PROCESS TERMINATED: PID {}", process.pid);
+                println!("DAEMON THREAD: {}, PROCESS TERMINATED: PID {}", i, process.pid);
                 drop(process);
             }
 
@@ -92,14 +93,14 @@ pub fn process_terminator_threads (handles: &mut Vec<thread::JoinHandle<()>>, nu
 
                 for i in 0..num_sim_threads {
                     ready_guard.push_back(Process::generate_sim_terminate_process());
-                    println!("KLL PROCESS ADDED TO READY QUEUE");
+                    println!("DAEMON THREAD: {}, KILL PROCESS ADDED TO READY QUEUE", i);
                 }
 
                 drop(ready_guard);
                 ready_queue_condvar.notify_all();
             }
 
-            println!("TERMINATOR {} FINISHED", i);
+            println!("DAEMON THREAD {} FINISHED", i);
         });
 
         handles.push(handle);

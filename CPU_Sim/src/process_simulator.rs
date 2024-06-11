@@ -24,7 +24,7 @@ pub fn process_simulator_threads (handles: &mut Vec<thread::JoinHandle<()>>, num
 
         let handle = thread::spawn(move || {
 
-            println!("SIMULATOR {} CREATED", i);
+            println!("SIM THREAD {} CREATED", i);
 
             loop {
 
@@ -36,7 +36,7 @@ pub fn process_simulator_threads (handles: &mut Vec<thread::JoinHandle<()>>, num
                 }
 
                 let mut process = ready_guard.pop_front().unwrap();
-                println!("READY QUEUE REMOVED, PID: {}", process.pid);
+                println!("SIM THREAD: {}, READY QUEUE REMOVED, PID: {}", i, process.pid);
 
                 // if process is kill process
                 if process.pid == -1 && process.state == KILL {
@@ -48,7 +48,7 @@ pub fn process_simulator_threads (handles: &mut Vec<thread::JoinHandle<()>>, num
                 }
 
                 process.run();
-                println!("PROCESS RUN, PID: {}, REMAINING TIME: {}", process.pid, process.remaining_burst_time);
+                println!("SIM THREAD: {}, PROCESS RUN, PID: {}, REMAINING TIME: {}", i, process.pid, process.remaining_burst_time);
 
                 if process.state == TERMINATED {
 
@@ -67,20 +67,20 @@ pub fn process_simulator_threads (handles: &mut Vec<thread::JoinHandle<()>>, num
                     }
 
                     // once done waiting, add process to terminated queue
-                    println!("TERMINATED QUEUE ADD, PID: {}", process.pid);
+                    println!("SIM THREAD: {}, TERMINATED QUEUE ADDs, PID: {}", i, process.pid);
                     terminated_guard.push_back(process);
                     drop(terminated_guard);
                     terminated_queue_condvar.notify_all();
                 } else {
                     // space is reserved in ready queue
-                    println!("READY QUEUE ADD, PID: {}", process.pid);
+                    println!("SIM THREAD: {}, READY QUEUE ADD, PID: {}", i, process.pid);
                     ready_guard.push_back(process);
                     drop(ready_guard);
                     ready_queue_condvar.notify_all();
                 }
             }
 
-            println!("SIMULATOR {} FINISHED", i);
+            println!("SIM THREAD {} FINISHED", i);
         });
 
         handles.push(handle);

@@ -62,12 +62,12 @@ pub fn process_generator_threads(handles: &mut Vec<thread::JoinHandle<()>>, num_
 
                 // create process and add to ready queue
                 let process = Process::generate_process(pid);
-                println!("PROCESS GENERATED, PID: {}, GEN THREAD: {}", process.pid, i);
-                println!("READY QUEUE ADD, PID: {}", process.pid, );
+                println!("GEN THREAD: {}, PROCESS GENERATED, PID: {}", i, process.pid);
+                println!("GEN THREAD: {},READY QUEUE ADD, PID: {}", i, process.pid, );
                 ready_guard.push_back(process);
             }
 
-            println!("GENERATOR {} FINISHED", i);
+            println!("GEN THREAD: {} FINISHED", i);
         });
 
         handles.push(handle);
